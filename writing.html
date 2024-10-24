@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Rajdhani&family=Six+Caps&display=swap" rel="stylesheet">
+	<title>MAV</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<header>
+	<a href="#Home">
+	<div class="logo"><img src="logo.png" alt="MAV"></div>
+	</a>
+
+	<nav class="nav-links">
+		
+		
+		
+		<div class="links">
+			<ul>
+				
+			
+			<li><a href="#Work">Reel</a></li>
+			<li><a href="#Recon">Recon</a></li>
+			<li><a href="#Tools">Tools</a></li>
+			<li><a href="#About">About</a></li>
+			<li><a href="mailto:viscione.m@gmail.com">Contact</a></li>
+			<li><a href="#Writing">Writing</a></li>
+			<li>         </li>
+			</ul>
+		</div>	
+
+	<!--☰-->
+
+	</nav>
+	<div class="menu-icon", onclick="toggleMenu(); x();">
+		<div class="bar1"></div>
+		<div class="bar1"></div>
+		<div class="bar1"></div>
+</header>
+<body>
+	<p id="Home">This is some text.</p>
+	<p class="spacer"></p>
+
+
+	<p class="floattitle"><h1 class="section-title">WRITING</h1></p>
+	<div class="video-container">
+		<img class="section-image" src="images/darkstrand.jpg" alt="Image 1">
+	</div>
+	<section id="Writing" class="image-section">
+
+
+
+
+
+
+
+	<div class="image-container">
+		<img class="section-image" src="images/darkstrand.jpg" alt="Image 1">
+		<h2>DARKSTRAND</h2>
+		<p>A short film adaptation of Stephen King’s Beachworld.</p>
+	</div>
+
+	<div class="image-container">
+		<img class="section-image" src="images/universalbasic.png" alt="Image 2">
+		<h2>UNIVERSALBASIC</h2>
+		<p>Sentient robots cope with the burden of understanding life. A Pilot </p>
+	</div>
+
+	<div class="image-container">
+		<img class="section-image" src="images/novus.jpg" alt="Image 3">
+		<h2>NOVUS</h2>
+		<p>The race to make Mars Habitable.</p>
+	</div>
+
+	<div class="image-container">
+		<img class="section-image" src="images/innerdemons.png" alt="Image 4">
+		<h2>INNER DEMONS</h2>
+		<p>The end has begun, only a few see Hell spilling into life.</p>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var menuIcon = document.querySelector('.menu-icon');
+		var nav = document.querySelector('nav');
+
+		menuIcon.addEventListener('click', function() {
+			nav.classList.toggle('active');
+		});
+	});
+	</script>
+	<!--
+	<script type=module>
+		const videos = document.querySelectorAll('video')
+		const observer = new IntersectionObserver((entries) =>     entries.forEach(entry => entry.isInteresecting && entry.target.play())
+		)
+		videos.forEach(video => observer.observe(video)
+	</script>
+	-->
+	<script>
+    let videos = document.querySelectorAll("video");
+    videos.forEach((video) => {
+        // We can only control playback without insteraction if video is mute
+        video.muted = true;
+        // Play is a promise so we need to check we have it
+        let playPromise = video.play();
+        if (playPromise !== undefined) {
+            playPromise.then((_) => {
+                let observer = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (
+                                entry.intersectionRatio !== 1 &&
+                                !video.paused
+                            ) {
+                                video.pause();
+                            } else if (video.paused) {
+                                video.play();
+                            }
+                        });
+                    },
+                    { threshold: 0.9 }
+                );
+                observer.observe(video);
+            });
+        }
+    });	
+	</script>
+
+
+	<script>
+	function myFunction(x) {
+		x.classList.toggle("change");
+	}
+	</script>
+
+
+
+</body>
+</html>
