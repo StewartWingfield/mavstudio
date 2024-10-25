@@ -415,9 +415,9 @@ Title: VFX Director, On set supervisor.  Roles: FX, Lighting, Comp, scene layout
       source.src = source.getAttribute("data-src");
       video.load();
       
-      // Try to autoplay, adding a fallback if it fails
+      // Attempt to play the video
       video.play().catch(() => {
-        // Autoplay blocked; show a play button if needed
+        // Autoplay blocked; add a play button as fallback
         const playButton = document.createElement("button");
         playButton.innerText = "Play Video";
         playButton.className = "play-button";
@@ -427,19 +427,25 @@ Title: VFX Director, On set supervisor.  Roles: FX, Lighting, Comp, scene layout
           playButton.remove();
         });
       });
+
+      // Reload if video fails to load or play
+      video.onerror = () => {
+        video.load(); // Reload the video if it fails
+      };
     }
   };
 
-  // Enhanced Intersection Observer settings for lazy loading
+  // Intersection Observer for lazy loading with adjusted root margin
   const videoObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         loadVideo(entry.target);
-        observer.unobserve(entry.target); // Unobserve after loading
+        observer.unobserve(entry.target); // Stop observing after loading
       }
     });
   }, {
-    threshold: 0.5 // Video must be at least 50% in view to load
+    rootMargin: "100px", // Start loading slightly before the video enters view
+    threshold: 0.25 // Load when at least 25% of video is in view
   });
 
   videos.forEach((video) => {
