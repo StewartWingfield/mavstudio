@@ -408,52 +408,43 @@ Title: VFX Director, On set supervisor.  Roles: FX, Lighting, Comp, scene layout
 	<script>
     document.addEventListener("DOMContentLoaded", function () {
   const videos = document.querySelectorAll("video");
-  const maxActiveVideos = 9; // Adjust based on device capability
+  const maxActiveVideos = 3; // Set a limit on active videos at once
   let activeVideos = new Set();
 
-  const loadVideo = (video) => {
+  const loadAndPlayVideo = (video) => {
     const source = video.querySelector("source[data-src]");
     if (source && !source.src) {
       source.src = source.getAttribute("data-src");
       video.load();
-
-      // Attempt to play video and handle autoplay issues
-      video.play().catch(() => {
-        // If autoplay fails, add a play button
-        const playButton = document.createElement("button");
-        playButton.innerText = "Play Video";
-        playButton.className = "play-button";
-        video.parentNode.insertBefore(playButton, video);
-        playButton.addEventListener("click", () => {
-          video.play();
-          playButton.remove();
-        });
-      });
-
-      // Add video to active set
-      activeVideos.add(video);
     }
+    
+    // Attempt to play the video
+    video.play().then(() => {
+      activeVideos.add(video); // Add to active set if play is successful
+    }).catch(() => {
+      // If play fails, do nothing; it will retry when it re-enters the viewport
+    });
   };
 
-  const unloadVideo = (video) => {
-    video.pause(); // Pause the video
-    activeVideos.delete(video);
+  const pauseAndUnloadVideo = (video) => {
+    video.pause();
+    activeVideos.delete(video); // Remove from active set
   };
 
-  // Intersection Observer with active video limit
+  // Intersection Observer to manage video loading and unloading
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const video = entry.target;
 
       if (entry.isIntersecting && activeVideos.size < maxActiveVideos) {
-        loadVideo(video);
+        loadAndPlayVideo(video);
       } else if (!entry.isIntersecting && activeVideos.has(video)) {
-        unloadVideo(video); // Unload video when it leaves the viewport
+        pauseAndUnloadVideo(video); // Pause and unload when leaving viewport
       }
     });
   }, {
     rootMargin: "100px", // Preload a bit before entering view
-    threshold: 0.25 // Load when 25% is in view
+    threshold: 0.5 // Trigger when 50% of the video is visible
   });
 
   videos.forEach((video) => {
