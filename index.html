@@ -408,23 +408,52 @@ Title: VFX Director, On set supervisor.  Roles: FX, Lighting, Comp, scene layout
 	<script>
     document.addEventListener("DOMContentLoaded", function () {
   const videos = document.querySelectorAll("video");
+  const maxActiveVideos = 3; // Adjust based on device capability
+  let activeVideos = new Set();
 
   const loadVideo = (video) => {
     const source = video.querySelector("source[data-src]");
-    if (source) {
+    if (source && !source.src) {
       source.src = source.getAttribute("data-src");
-      video.load(); // Start loading the video
-      video.play(); // Start playing the video
+      video.load();
+
+      // Attempt to play video and handle autoplay issues
+      video.play().catch(() => {
+        // If autoplay fails, add a play button
+        const playButton = document.createElement("button");
+        playButton.innerText = "Play Video";
+        playButton.className = "play-button";
+        video.parentNode.insertBefore(playButton, video);
+        playButton.addEventListener("click", () => {
+          video.play();
+          playButton.remove();
+        });
+      });
+
+      // Add video to active set
+      activeVideos.add(video);
     }
   };
 
-  const videoObserver = new IntersectionObserver((entries, observer) => {
+  const unloadVideo = (video) => {
+    video.pause(); // Pause the video
+    activeVideos.delete(video);
+  };
+
+  // Intersection Observer with active video limit
+  const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        loadVideo(entry.target);
-        observer.unobserve(entry.target); // Unobserve after loading
+      const video = entry.target;
+
+      if (entry.isIntersecting && activeVideos.size < maxActiveVideos) {
+        loadVideo(video);
+      } else if (!entry.isIntersecting && activeVideos.has(video)) {
+        unloadVideo(video); // Unload video when it leaves the viewport
       }
     });
+  }, {
+    rootMargin: "100px", // Preload a bit before entering view
+    threshold: 0.25 // Load when 25% is in view
   });
 
   videos.forEach((video) => {
