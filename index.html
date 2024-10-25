@@ -397,23 +397,24 @@ Title: VFX Director, On set supervisor.  Roles: FX, Lighting, Comp, scene layout
 		});
 	});
 	</script>
-
+	<!--
+	<script type=module>
+		const videos = document.querySelectorAll('video')
+		const observer = new IntersectionObserver((entries) =>     entries.forEach(entry => entry.isInteresecting && entry.target.play())
+		)
+		videos.forEach(video => observer.observe(video)
+	</script>
+	-->
 	<script>
     document.addEventListener("DOMContentLoaded", function () {
   const videos = document.querySelectorAll("video");
-  
-  // Function to detect if on mobile
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const loadVideo = (video) => {
     const source = video.querySelector("source[data-src]");
     if (source) {
       source.src = source.getAttribute("data-src");
-      video.preload = isMobile ? "auto" : "none"; // Mobile gets 'auto' to ensure loading
-      video.load(); // Load video
-      if (!isMobile) {
-        video.play(); // Autoplay on desktop, optional on mobile
-      }
+      video.load(); // Start loading the video
+      video.play(); // Start playing the video
     }
   };
 
